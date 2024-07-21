@@ -1,17 +1,25 @@
 .product-form {
-    width: 50%;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
+    width: 20rem;
+    max-width: 90%;
+    margin: auto;
 }
 
-.form-control {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    margin: 3rem 0;
+.product-item {
+    width: 20rem;
+    max-width: 95%;
 }
 
-.product-form button {
-    width: 100%;
+.product__title {
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.product__price {
+    text-align: center;
+    color: #4d4d4d;
+    margin-bottom: 0.5rem;
+}
+
+.product__description {
+    text-align: center;
 }

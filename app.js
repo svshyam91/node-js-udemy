@@ -8,6 +8,8 @@ const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 
 const app = express();
+app.set('view engine', 'pug');
+app.set('views', 'views');
 
 app.use(express.urlencoded({ extended: true }));
 console.log('__dirname: ', __dirname);

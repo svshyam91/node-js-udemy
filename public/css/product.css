@@ -5,6 +5,10 @@
     display: block;
 }
 
+.centered {
+    text-align: center;
+}
+
 .product-item {
     width: 20rem;
     max-width: 95%;

@@ -12,7 +12,7 @@
                 </div>
                 <h2><%= product.price %></h2>
                 <p><%= product.description %></p>
-                <form action="/cart" class="btn">Add to Cart</form>
+                <%- include('../includes/add-to-cart.ejs') %>
             </div>
         </main>
         <%- include('../includes/end.ejs') %>

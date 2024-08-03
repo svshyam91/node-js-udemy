@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
+const Cart = require('./cart');
+
 const p = path.join(__dirname, '..', 'data', 'products.json');
 
 const getProductsFromFile = (callback) => {
@@ -8,7 +10,12 @@ const getProductsFromFile = (callback) => {
         if (err) {
             callback([]);
         } else {
-            callback(JSON.parse(fileData));
+            try {
+                const data = JSON.parse(fileData);
+                callback(data);
+            } catch (error) {
+                callback([]);
+            }
         }
     });
 };
@@ -37,7 +44,9 @@ module.exports = class Product {
                 const updatedProducts = [...products];
                 updatedProducts[existingProductIndex] = this;
                 fs.writeFile(p, JSON.stringify(updatedProducts), (err) => {
-                    console.log(err);
+                    if (err) {
+                        console.log('Error in writing file', err);
+                    }
                 });
             } else {
                 // Creating product
@@ -46,7 +55,9 @@ module.exports = class Product {
                 this.id = Math.random().toString();
                 products.push(this);
                 fs.writeFile(p, JSON.stringify(products), (err) => {
-                    console.log(err);
+                    if (err) {
+                        console.log('Error in writing file', err);
+                    }
                 });
             }
         });
@@ -54,12 +65,14 @@ module.exports = class Product {
 
     delete() {
         getProductsFromFile((products) => {
+            const product = products.find((prod) => prod.id === this.id);
             const updatedProducts = products.filter(
                 (prod) => prod.id !== this.id
             );
             fs.writeFile(p, JSON.stringify(updatedProducts), (err) => {
                 if (!err) {
                     // add logic to delete item from cart
+                    Cart.deleteProduct(this.id, product.price);
                 }
             });
         });

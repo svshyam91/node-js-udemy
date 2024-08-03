@@ -63,4 +63,10 @@ module.exports = class Cart {
             });
         });
     }
+
+    static getCart(callback) {
+        getCartFromFile((cart) => {
+            callback(cart);
+        });
+    }
 };

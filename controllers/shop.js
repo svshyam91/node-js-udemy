@@ -34,7 +34,6 @@ exports.getProduct = (req, res, next) => {
 
 exports.getCart = (req, res, next) => {
     Cart.getCart((cart) => {
-        console.log('cart', cart);
         Product.fetchAll((products) => {
             const cartProducts = [];
             cart.products.forEach((cartProduct) => {

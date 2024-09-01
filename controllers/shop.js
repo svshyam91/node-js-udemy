@@ -2,40 +2,51 @@ const Cart = require('../models/cart');
 const Product = require('../models/product');
 
 exports.getIndex = (req, res, next) => {
-    Product.fetchAll()
-        .then(([rows, fieldData]) => {
+    Product.findAll()
+        .then((products) => {
             res.render('shop/index.ejs', {
-                prods: rows,
+                prods: products,
                 pageTitle: 'Shop',
                 path: '/',
             });
         })
-        .catch((err) => {
-            console.log('Error while fetching products ', err);
-        });
+        .catch((err) => console.log('Error while fetching products ', err));
 };
 
 exports.getProducts = (req, res, next) => {
-    Product.fetchAll()
-        .then(([rows, fieldData]) => {
+    Product.findAll()
+        .then((products) => {
             res.render('shop/product-list.ejs', {
-                prods: rows,
+                prods: products,
                 pageTitle: 'All Products',
                 path: '/products',
             });
         })
-        .catch((err) => {
-            console.log('Error while fetching all products', err);
-        });
+        .catch((err) => console.log('Error while fetching all products', err));
 };
 
 exports.getProduct = (req, res, next) => {
     const productId = req.params.productId;
-    Product.findProductById(productId)
-        .then(([rows]) => {
+    // Product.findAll({
+    //     where: {
+    //         id: productId,
+    //     },
+    // })
+    //     .then((products) => {
+    //         console.log('product: ', products);
+    //         res.render('shop/product-detail', {
+    //             product: products[0],
+    //             pageTitle: products[0].title,
+    //             path: '/products',
+    //         });
+    //     })
+    //     .catch((err) => console.log(err));
+
+    Product.findByPk(productId)
+        .then((product) => {
             res.render('shop/product-detail', {
-                product: rows[0],
-                pageTitle: rows[0].title,
+                product: product,
+                pageTitle: product.title,
                 path: '/products',
             });
         })

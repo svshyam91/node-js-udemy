@@ -19,7 +19,9 @@ exports.postAddProduct = (req, res, next) => {
         price: price,
         imageUrl: imageURL,
     })
-        .then((res) => console.log(res))
+        .then(() => {
+            res.redirect('/admin/products');
+        })
         .catch((err) => console.log(err));
 };
 
@@ -29,9 +31,8 @@ exports.getEditProduct = (req, res, next) => {
     if (!editMode) {
         res.redirect('/');
     }
-    Product.findProductById(productId)
-        .then(([rows]) => {
-            const product = rows[0];
+    Product.findByPk(productId)
+        .then((product) => {
             if (!product) {
                 res.redirect('/');
             }
@@ -51,10 +52,16 @@ exports.postEditProduct = (req, res, next) => {
     const price = req.body.price;
     const description = req.body.description;
     const id = req.body.productId;
-    const product = new Product(id, title, imageUrl, price, description);
-    product
-        .save()
+    Product.findByPk(id)
+        .then((product) => {
+            product.title = title;
+            product.imageUrl = imageUrl;
+            product.price = price;
+            product.description = description;
+            return product.save();
+        })
         .then(() => {
+            console.log('Updated product with productId: ', id);
             res.redirect('/admin/products');
         })
         .catch((err) => console.log(err));
@@ -62,20 +69,22 @@ exports.postEditProduct = (req, res, next) => {
 
 exports.postDeleteProduct = (req, res, next) => {
     const id = req.body.productId;
-    const product = new Product(id, null, null, null, null);
-    product
-        .delete()
+    Product.findByPk(id)
+        .then((product) => {
+            return product.destroy();
+        })
         .then(() => {
+            console.log('Product with productId: ', id, ' has been deleted');
             res.redirect('/admin/products');
         })
         .catch((err) => console.log(err));
 };
 
 exports.getProducts = (req, res, next) => {
-    Product.fetchAll()
-        .then(([rows]) => {
+    Product.findAll()
+        .then((products) => {
             res.render('admin/products.ejs', {
-                prods: rows,
+                prods: products,
                 pageTitle: 'Admin Products',
                 path: '/admin/products',
             });
